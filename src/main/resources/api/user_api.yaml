@@ -1,0 +1,237 @@
+openapi: 3.0.3
+info:
+  title: Betting API
+  version: 1.0.0
+servers:
+  - url: http://localhost:6678/api/user
+    description: Development server
+tags:
+  - name: betting
+paths:
+  /main-page:
+    get:
+      operationId: GetMainPage
+      tags:
+        - user_pages
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/mainPage'
+
+  /match-page/{match_id}:
+    get:
+      operationId: GetMatchPage
+      tags:
+        - user_pages
+      parameters:
+        - name: match_id
+          description: match-id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: OK
+
+  /matches:
+    put:
+      operationId: AddMatches
+      tags:
+        - matches
+        - admin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/matches'
+      responses:
+        200:
+          description: OK
+    get:
+      operationId: GetMatches
+      tags:
+        - matches
+        - mainPage
+      responses:
+        200:
+          description: Get active matches
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/matches'
+  /org:
+    get:
+      operationId: GetOrganisations
+      tags:
+        - orgs
+        - mainPage
+      responses:
+        200:
+          description: Get organisations
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/organisations'
+  /balance:
+    post:
+      operationId: CreateBalanceTicket
+      tags:
+        - balance
+        - user
+      requestBody:
+        $ref: '#/components/requestBodies/BalanceTicketBody'
+      responses:
+        200:
+          description: Allow user to create balance ticket
+          content:
+            application/json:
+              schema:
+                type: string
+
+  /ping:
+    get:
+      operationId: ping
+      parameters:
+        - name: state
+          in: query
+          schema:
+            type: string
+      tags:
+        - betting
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/pingResponse'
+
+    post:
+      operationId: pingPost
+      requestBody:
+        $ref: '#/components/requestBodies/PingBody'
+      tags:
+        - betting
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/pingResponse'
+
+
+
+components:
+  schemas:
+
+    balanceTicket:
+      type: object
+      properties:
+        type:
+          type: string
+        userId:
+          type: integer
+    organisation:
+      type: object
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+        logoUrl:
+          type: string
+        region:
+          type: string
+
+    organisations:
+      type: array
+      items:
+        $ref: '#/components/schemas/organisation'
+
+    match:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        lTeamName:
+          type: string
+        rTeamName:
+          type: string
+        status:
+          type: string
+
+    matches:
+      type: array
+      items:
+        $ref: '#/components/schemas/match'
+
+    pingResponse:
+      type: object
+      properties:
+        pong:
+          type: string
+
+    tournament:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        started_at:
+          type: string
+        ended_at:
+          type: string
+        matches:
+          type: array
+          items:
+            $ref: '#/components/schemas/match'
+
+    discipline:
+      type: object
+      properties:
+        name:
+          type: string
+        id:
+          type: integer
+          format: int64
+        tournaments:
+          type: array
+          items:
+            $ref: '#/components/schemas/tournament'
+
+    mainPage:
+      type: object
+      properties:
+        disciplines:
+          type: array
+          items:
+            $ref: '#/components/schemas/discipline'
+
+
+  requestBodies:
+
+    PingBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/pingResponse'
+
+    BalanceTicketBody:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/balanceTicket'
+
+
+# bid, discipline, org, tournament
+# [discipline] <- [tournament] <- [match] --- /main-page
+# [match] <- [bid_event] <- [bid]

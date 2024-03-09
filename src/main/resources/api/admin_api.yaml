@@ -1,0 +1,33 @@
+openapi: 3.0.3
+info:
+  title: Betting API
+  version: 1.0.0
+servers:
+  - url: http://localhost:6678/api/admin
+    description: Development server
+tags:
+  - name: betting
+paths:
+  /ping:
+    get:
+      operationId: ping
+      tags:
+        - betting
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/pingResponse'
+
+
+
+components:
+  schemas:
+    pingResponse:
+      type: object
+      properties:
+        pong:
+          type: string
+
