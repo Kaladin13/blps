@@ -7,5 +7,5 @@ import org.springframework.boot.runApplication
 class BlpsApplication
 
 fun main(args: Array<String>) {
-	runApplication<BlpsApplication>(*args)
+    runApplication<BlpsApplication>(*args)
 }
