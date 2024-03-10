@@ -13,7 +13,7 @@
             <inputSchema>public</inputSchema>
         </database>
         <target>
-            <packageName>com.example.generated</packageName>
+            <packageName>ru.itmo.blps.generated.jooq</packageName>
             <directory>target/generated-sources/jooq</directory>
         </target>
     </generator>

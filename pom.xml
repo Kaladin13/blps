@@ -128,22 +128,21 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
-<!--            <plugin>-->
-<!--                <groupId>org.jooq</groupId>-->
-<!--                <artifactId>jooq-codegen-maven</artifactId>-->
-<!--                <version>3.16.6</version>-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <goals>-->
-<!--                            <goal>generate</goal>-->
-<!--                        </goals>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--                <configuration>-->
-<!--                    &lt;!&ndash;Specify the jooq configuration file you want to use&ndash;&gt;-->
-<!--                    <configurationFile>${project.basedir}/src/main/resources/jooq_config.xml</configurationFile>-->
-<!--                </configuration>-->
-<!--            </plugin>-->
+            <plugin>
+                <groupId>org.jooq</groupId>
+                <artifactId>jooq-codegen-maven</artifactId>
+                <version>3.16.6</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <configurationFile>${project.basedir}/src/main/resources/jooq_config.xml</configurationFile>
+                </configuration>
+            </plugin>
 
             <plugin>
                 <groupId>org.openapitools</groupId>
@@ -160,9 +159,9 @@
                             <inputSpec>${project.basedir}/src/main/resources/api/user_api.yaml</inputSpec>
                             <generatorName>spring</generatorName>
                             <output>${project.build.directory}/generated-sources/openapi</output>
-                            <apiPackage>${project.basedir}/api/user</apiPackage>
-                            <modelPackage>${project.basedir}/model/user</modelPackage>
-                            <invokerPackage>${project.basedir}</invokerPackage>
+                            <apiPackage>ru.itmo.blps.generated.api.user</apiPackage>
+                            <modelPackage>ru.itmo.blps.generated.model.user</modelPackage>
+                            <invokerPackage>ru.itmo.blps</invokerPackage>
                             <configOptions>
                                 <delegatePattern>true</delegatePattern>
                             </configOptions>
@@ -178,9 +177,9 @@
                             <inputSpec>${project.basedir}/src/main/resources/api/admin_api.yaml</inputSpec>
                             <generatorName>spring</generatorName>
                             <output>${project.build.directory}/generated-sources/openapi</output>
-                            <apiPackage>${project.basedir}/api/admin</apiPackage>
-                            <modelPackage>${project.basedir}/model/admin</modelPackage>
-                            <invokerPackage>${project.basedir}</invokerPackage>
+                            <apiPackage>ru.itmo.blps.generated.api.admin</apiPackage>
+                            <modelPackage>ru.itmo.blps.generated.model.admin</modelPackage>
+                            <invokerPackage>ru.itmo.blps</invokerPackage>
                             <configOptions>
                                 <delegatePattern>true</delegatePattern>
                             </configOptions>

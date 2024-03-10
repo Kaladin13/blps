@@ -1,12 +1,12 @@
 openapi: 3.0.3
 info:
-  title: Betting API
+  title: Schedule service
   version: 1.0.0
 servers:
   - url: http://localhost:6678/api/admin
     description: Development server
 tags:
-  - name: betting
+  - name: schedule
 paths:
   /ping:
     get:
@@ -22,7 +22,6 @@ paths:
                 $ref: '#/components/schemas/pingResponse'
 
 
-
 components:
   schemas:
     pingResponse:
@@ -30,4 +29,3 @@ components:
       properties:
         pong:
           type: string
-
