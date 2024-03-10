@@ -6,13 +6,14 @@ servers:
   - url: http://localhost:6678/api/admin
     description: Development server
 tags:
-  - name: schedule
+  - name: schedule-draft
+  - name: util
 paths:
   /ping:
     get:
       operationId: ping
       tags:
-        - betting
+        - util
       responses:
         200:
           description: OK
@@ -21,6 +22,65 @@ paths:
               schema:
                 $ref: '#/components/schemas/pingResponse'
 
+  /schedule-draft:
+    post:
+      operationId: createScheduleDraft
+      tags:
+        - schedule-draft
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/scheduleDraftCreationRequest'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/scheduleDraft'
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+
+    get:
+      operationId: getAllScheduleDrafts
+      tags:
+        - schedule-draft
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/scheduleDraft'
+    patch:
+      operationId: updateScheduleDraftStatus
+      tags:
+        - schedule-draft
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/updateScheduleDraftStatus'
+      responses:
+        200:
+          description: OK
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
 
 components:
   schemas:
@@ -29,3 +89,77 @@ components:
       properties:
         pong:
           type: string
+
+
+    scheduleDraftCreationRequest:
+      type: object
+      required:
+        - dateOfSchedule
+        - programs
+      properties:
+        dateOfSchedule:
+          type: string
+          format: date-time
+        programs:
+          type: array
+          items:
+            $ref: '#/components/schemas/program'
+
+    scheduleDraft:
+      type: object
+      required:
+        - id
+        - dateOfSchedule
+        - programs
+      properties:
+        id:
+          type: number
+          format: int64
+        dateOfSchedule:
+          type: string
+          format: date-time
+        programs:
+          type: array
+          items:
+            $ref: '#/components/schemas/program'
+
+    program:
+      type: object
+      required:
+        - startTime
+        - endTime
+        - name
+      properties:
+        startTime:
+          type: string
+          format: time
+        endTime:
+          type: string
+          format: time
+        name:
+          type: string
+
+    errorResponse:
+      type: object
+      properties:
+        reason:
+          type: string
+
+    updateScheduleDraftStatus:
+      type: object
+      required:
+        - scheduleDraftId
+        - status
+      properties:
+        scheduleDraftId:
+          type: number
+          format: int64
+        status:
+          $ref: '#/components/schemas/scheduleDraftStatus'
+
+    scheduleDraftStatus:
+      type: string
+      enum:
+        - OPENED
+        - REJECTED
+        - CONFIRMED

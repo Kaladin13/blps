@@ -99,8 +99,11 @@
             <artifactId>jackson-databind-nullable</artifactId>
             <version>0.2.1</version>
         </dependency>
-
-
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+            <version>4.17.2</version>
+        </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -208,6 +211,7 @@
                             <modelPackage>ru.itmo.blps.generated.model.admin</modelPackage>
                             <invokerPackage>ru.itmo.blps</invokerPackage>
                             <configOptions>
+                                <useTags>true</useTags>
                                 <delegatePattern>true</delegatePattern>
                             </configOptions>
                         </configuration>
@@ -215,6 +219,14 @@
 
 
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.liquibase</groupId>
+                <artifactId>liquibase-maven-plugin</artifactId>
+                <version>4.6.2</version>
+                <configuration>
+                    <propertyFile>src/main/resources/liquibase/liquibase.properties</propertyFile>
+                </configuration>
             </plugin>
 
         </plugins>

@@ -6,13 +6,13 @@ servers:
   - url: http://localhost:6678/api/user
     description: Development server
 tags:
-  - name: schedule
+  - name: util
 paths:
   /ping:
     get:
       operationId: ping
       tags:
-        - betting
+        - util
       responses:
         200:
           description: OK
