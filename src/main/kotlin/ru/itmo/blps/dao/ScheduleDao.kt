@@ -9,4 +9,6 @@ interface ScheduleDao {
     fun getAllByStatus(status: ScheduleStatus): List<Schedule>
 
     fun updateStatus(id: Long, newStatus: ScheduleStatus)
+
+    fun exists(id: Long): Boolean
 }

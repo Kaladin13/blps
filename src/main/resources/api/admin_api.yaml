@@ -69,9 +69,7 @@ paths:
         content:
           application/json:
             schema:
-              type: array
-              items:
-                $ref: '#/components/schemas/updateScheduleDraftStatus'
+              $ref: '#/components/schemas/updateScheduleDraftStatus'
       responses:
         200:
           description: OK
@@ -99,7 +97,7 @@ components:
       properties:
         dateOfSchedule:
           type: string
-          format: date
+          format: date-time
         programs:
           type: array
           items:
@@ -117,7 +115,7 @@ components:
           format: int64
         dateOfSchedule:
           type: string
-          format: date
+          format: date-time
         programs:
           type: array
           items:
@@ -132,10 +130,10 @@ components:
       properties:
         startTime:
           type: string
-          format: time
+          format: date-time
         endTime:
           type: string
-          format: time
+          format: date-time
         name:
           type: string
 
