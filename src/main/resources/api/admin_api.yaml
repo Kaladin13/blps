@@ -99,7 +99,7 @@ components:
       properties:
         dateOfSchedule:
           type: string
-          format: date-time
+          format: date
         programs:
           type: array
           items:
@@ -113,11 +113,11 @@ components:
         - programs
       properties:
         id:
-          type: number
+          type: integer
           format: int64
         dateOfSchedule:
           type: string
-          format: date-time
+          format: date
         programs:
           type: array
           items:
@@ -152,7 +152,7 @@ components:
         - status
       properties:
         scheduleDraftId:
-          type: number
+          type: integer
           format: int64
         status:
           $ref: '#/components/schemas/scheduleDraftStatus'
