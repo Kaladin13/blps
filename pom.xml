@@ -128,7 +128,9 @@
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-maven-plugin</artifactId>
+                <version>${kotlin.version}</version>
                 <configuration>
+                    <jvmTarget>17</jvmTarget>
                     <args>
                         <arg>-Xjsr305=strict</arg>
                     </args>
@@ -222,7 +224,6 @@
 
         </plugins>
     </build>
-
 
 
 </project>
