@@ -9,6 +9,6 @@
     </preConditions>
 
     <include file="tables/schedule.sql" relativeToChangelogFile="true"/>
-    <include file="tables/programs.sql" relativeToChangelogFile="true"/>
+    <include file="tables/program.sql" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>
