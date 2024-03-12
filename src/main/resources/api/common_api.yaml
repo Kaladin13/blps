@@ -1,0 +1,29 @@
+components:
+  schemas:
+    program:
+      type: object
+      required:
+        - startTime
+        - endTime
+        - name
+      properties:
+        startTime:
+          type: string
+          format: date-time
+        endTime:
+          type: string
+          format: date-time
+        name:
+          type: string
+
+    pingResponse:
+      type: object
+      properties:
+        pong:
+          type: string
+
+    errorResponse:
+      type: object
+      properties:
+        reason:
+          type: string

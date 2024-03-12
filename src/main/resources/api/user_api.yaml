@@ -20,7 +20,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/pingResponse'
+                $ref: './common_api.yaml#/components/schemas/pingResponse'
   /schedule:
     get:
       operationId: getScheduleForDay
@@ -45,7 +45,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/errorResponse'
+                $ref: './common_api.yaml#/components/schemas/errorResponse'
 
 components:
   schemas:
@@ -74,7 +74,7 @@ components:
     scheduleResponse:
       type: array
       items:
-        $ref: '#/components/schemas/program'
+        $ref: './common_api.yaml#/components/schemas/program'
 
     errorResponse:
       type: object

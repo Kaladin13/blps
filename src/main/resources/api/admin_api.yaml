@@ -20,7 +20,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/pingResponse'
+                $ref: './common_api.yaml#/components/schemas/pingResponse'
 
   /schedule-draft:
     post:
@@ -45,7 +45,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/errorResponse'
+                $ref: './common_api.yaml#/components/schemas/errorResponse'
 
     get:
       operationId: getAllScheduleDrafts
@@ -78,17 +78,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/errorResponse'
+                $ref: './common_api.yaml#/components/schemas/errorResponse'
 
 components:
   schemas:
-    pingResponse:
-      type: object
-      properties:
-        pong:
-          type: string
-
-
     scheduleDraftCreationRequest:
       type: object
       required:
@@ -101,7 +94,7 @@ components:
         programs:
           type: array
           items:
-            $ref: '#/components/schemas/program'
+            $ref: './common_api.yaml#/components/schemas/program'
 
     scheduleDraft:
       type: object
@@ -119,29 +112,7 @@ components:
         programs:
           type: array
           items:
-            $ref: '#/components/schemas/program'
-
-    program:
-      type: object
-      required:
-        - startTime
-        - endTime
-        - name
-      properties:
-        startTime:
-          type: string
-          format: date-time
-        endTime:
-          type: string
-          format: date-time
-        name:
-          type: string
-
-    errorResponse:
-      type: object
-      properties:
-        reason:
-          type: string
+            $ref: './common_api.yaml#/components/schemas/program'
 
     updateScheduleDraftStatus:
       type: object

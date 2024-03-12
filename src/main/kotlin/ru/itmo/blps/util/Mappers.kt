@@ -2,12 +2,11 @@ package ru.itmo.blps.util
 
 import ru.itmo.blps.generated.jooq.tables.records.ProgramRecord
 import ru.itmo.blps.generated.jooq.tables.records.ScheduleRecord
-import ru.itmo.blps.generated.model.admin.ScheduleDraft
-import ru.itmo.blps.generated.model.admin.ScheduleDraftCreationRequest
+import ru.itmo.blps.generated.model.ScheduleDraft
+import ru.itmo.blps.generated.model.ScheduleDraftCreationRequest
 import ru.itmo.blps.model.Program
 import ru.itmo.blps.model.Schedule
 import ru.itmo.blps.model.ScheduleStatus
-import ru.itmo.blps.util.Mappers.toModel
 
 object Mappers {
 
@@ -32,8 +31,8 @@ object Mappers {
         )
     }
 
-    fun Program.toApiModel(): ru.itmo.blps.generated.model.admin.Program {
-        return ru.itmo.blps.generated.model.admin.Program()
+    fun Program.toApiModel(): ru.itmo.blps.generated.model.Program {
+        return ru.itmo.blps.generated.model.Program()
             .name(this.name)
             .startTime(this.startTime)
             .endTime(this.endTime)
@@ -46,7 +45,7 @@ object Mappers {
             .programs(this.programs.map { it.toApiModel() })
     }
 
-    fun ru.itmo.blps.generated.model.admin.Program.toModel(): Program {
+    fun ru.itmo.blps.generated.model.Program.toModel(): Program {
         return Program(
             name = this.name,
             startTime = this.startTime,

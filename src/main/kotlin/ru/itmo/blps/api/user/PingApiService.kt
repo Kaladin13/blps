@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Component
 import ru.itmo.blps.generated.api.user.PingApiDelegate
-import ru.itmo.blps.generated.model.user.PingResponse
+import ru.itmo.blps.generated.model.PingResponse
 
 @Component
 @RequiredArgsConstructor

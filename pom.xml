@@ -190,7 +190,7 @@
                             <generatorName>spring</generatorName>
                             <output>${project.build.directory}/generated-sources/openapi</output>
                             <apiPackage>ru.itmo.blps.generated.api.user</apiPackage>
-                            <modelPackage>ru.itmo.blps.generated.model.user</modelPackage>
+                            <modelPackage>ru.itmo.blps.generated.model</modelPackage>
                             <invokerPackage>ru.itmo.blps</invokerPackage>
                             <configOptions>
                                 <delegatePattern>true</delegatePattern>
@@ -208,7 +208,7 @@
                             <generatorName>spring</generatorName>
                             <output>${project.build.directory}/generated-sources/openapi</output>
                             <apiPackage>ru.itmo.blps.generated.api.admin</apiPackage>
-                            <modelPackage>ru.itmo.blps.generated.model.admin</modelPackage>
+                            <modelPackage>ru.itmo.blps.generated.model</modelPackage>
                             <invokerPackage>ru.itmo.blps</invokerPackage>
                             <configOptions>
                                 <useTags>true</useTags>
