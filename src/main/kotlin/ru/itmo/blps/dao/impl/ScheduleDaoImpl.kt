@@ -7,10 +7,12 @@ import org.springframework.transaction.annotation.Transactional
 import ru.itmo.blps.dao.ScheduleDao
 import ru.itmo.blps.generated.jooq.Tables.PROGRAM
 import ru.itmo.blps.generated.jooq.Tables.SCHEDULE
+import ru.itmo.blps.model.Program
 import ru.itmo.blps.model.Schedule
 import ru.itmo.blps.model.ScheduleStatus
 import ru.itmo.blps.util.Mappers.toModel
 import ru.itmo.blps.util.Mappers.toRecord
+import java.time.OffsetDateTime
 
 @Repository
 class ScheduleDaoImpl(
@@ -20,7 +22,7 @@ class ScheduleDaoImpl(
     @Transactional
     override fun insert(schedule: Schedule) {
         dslContext.batchInsert(
-                schedule.programs.map { it.toRecord(schedule.id) }
+                schedule.programs.map { schedule.id?.let { it1 -> it.toRecord(it1) } }
         )
 
         dslContext.batchInsert(
@@ -59,6 +61,10 @@ class ScheduleDaoImpl(
         }
 
         return result
+    }
+
+    override fun getScheduleForDay(startTime: OffsetDateTime): List<Program> {
+        TODO("Not yet implemented")
     }
 
     @Transactional

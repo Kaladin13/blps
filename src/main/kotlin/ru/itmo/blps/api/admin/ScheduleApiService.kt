@@ -11,15 +11,18 @@ import ru.itmo.blps.generated.model.admin.ScheduleDraftCreationRequest
 import ru.itmo.blps.generated.model.admin.UpdateScheduleDraftStatus
 import ru.itmo.blps.model.ScheduleStatus
 import ru.itmo.blps.util.Mappers.toApiModel
+import ru.itmo.blps.util.Mappers.toModel
 
 @Component
 class ScheduleApiService(
     private val scheduleDao: ScheduleDao,
 ) : ScheduleDraftApiDelegate {
     override fun createScheduleDraft(
-            scheduleDraftCreationRequest: ScheduleDraftCreationRequest
+        scheduleDraftCreationRequest: ScheduleDraftCreationRequest
     ): ResponseEntity<ScheduleDraft> {
-        TODO()
+        scheduleDao.insert(scheduleDraftCreationRequest.toModel())
+
+        return ResponseEntity(HttpStatus.OK)
     }
 
     override fun getAllScheduleDrafts(): ResponseEntity<List<ScheduleDraft>> {
@@ -28,15 +31,15 @@ class ScheduleApiService(
     }
 
     override fun updateScheduleDraftStatus(
-            updateScheduleDraftStatus: UpdateScheduleDraftStatus
+        updateScheduleDraftStatus: UpdateScheduleDraftStatus
     ): ResponseEntity<Void> {
         val exists = scheduleDao.exists(updateScheduleDraftStatus.scheduleDraftId)
         if (!exists) {
             throw ResponseStatusException(HttpStatus.NOT_FOUND)
         }
         scheduleDao.updateStatus(
-                updateScheduleDraftStatus.scheduleDraftId,
-                ScheduleStatus.valueOf(updateScheduleDraftStatus.status.value)
+            updateScheduleDraftStatus.scheduleDraftId,
+            ScheduleStatus.valueOf(updateScheduleDraftStatus.status.value)
         )
 
         return ResponseEntity(HttpStatus.OK)

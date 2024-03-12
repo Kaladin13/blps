@@ -15,10 +15,10 @@ class GlobalErrorResponseExceptionHandler : ResponseEntityExceptionHandler() {
     )
     fun handleResponseStatusException(ex: ResponseStatusException): ResponseEntity<ErrorResponse> {
         return ResponseEntity.status(ex.statusCode)
-                .body(
-                        ErrorResponse()
-                                .reason(ex.reason)
-                )
+            .body(
+                ErrorResponse()
+                    .reason(ex.reason)
+            )
     }
 
 }

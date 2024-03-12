@@ -7,6 +7,7 @@ servers:
     description: Development server
 tags:
   - name: util
+  - name: program-schedule
 paths:
   /ping:
     get:
@@ -20,7 +21,31 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/pingResponse'
-
+  /schedule:
+    get:
+      operationId: getScheduleForDay
+      tags:
+        - program-schedule
+      parameters:
+        - in: query
+          required: true
+          name: datetime
+          schema:
+            type: string
+            format: date-time
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/scheduleResponse'
+        500:
+          description: Internal error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
 
 components:
   schemas:
@@ -28,4 +53,31 @@ components:
       type: object
       properties:
         pong:
+          type: string
+
+    program:
+      type: object
+      required:
+        - startTime
+        - endTime
+        - name
+      properties:
+        startTime:
+          type: string
+          format: date-time
+        endTime:
+          type: string
+          format: date-time
+        name:
+          type: string
+
+    scheduleResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/program'
+
+    errorResponse:
+      type: object
+      properties:
+        reason:
           type: string
