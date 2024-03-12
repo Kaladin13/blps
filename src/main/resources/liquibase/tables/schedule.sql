@@ -5,5 +5,5 @@ create table if not exists schedule
 (
     id bigserial primary key,
     status varchar(50) not null,
-    date timestamptz not null unique
-)
+    date timestamptz not null
+);

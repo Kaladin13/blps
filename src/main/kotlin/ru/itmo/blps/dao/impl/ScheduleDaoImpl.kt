@@ -11,7 +11,6 @@ import ru.itmo.blps.model.Program
 import ru.itmo.blps.model.Schedule
 import ru.itmo.blps.model.ScheduleStatus
 import ru.itmo.blps.util.Mappers.toModel
-import ru.itmo.blps.util.Mappers.toRecord
 import java.time.OffsetDateTime
 
 @Repository
@@ -22,13 +21,18 @@ class ScheduleDaoImpl(
     @Transactional
     override fun insert(schedule: Schedule) {
         val persistedSchedule = dslContext.insertInto(SCHEDULE)
-                .set(schedule.toRecord())
+                .set(SCHEDULE.STATUS, schedule.status.toString())
+                .set(SCHEDULE.DATE, schedule.date)
                 .returning()
                 .fetchOne() ?: throw RuntimeException("Can not persist schedule")
-
-        dslContext.batchInsert(
-                schedule.programs.map { it.toRecord(persistedSchedule.id)  }
-        )
+        schedule.programs.forEach {
+            dslContext.insertInto(PROGRAM)
+                    .set(PROGRAM.SCHEDULE_ID, persistedSchedule.id)
+                    .set(PROGRAM.START_TIME, it.startTime)
+                    .set(PROGRAM.END_TIME, it.endTime)
+                    .set(PROGRAM.NAME, it.name)
+                    .execute()
+        }
     }
 
     @Transactional(readOnly = true)

@@ -1,7 +1,6 @@
 package ru.itmo.blps.util
 
 import ru.itmo.blps.generated.jooq.tables.records.ProgramRecord
-import ru.itmo.blps.generated.jooq.tables.records.ScheduleRecord
 import ru.itmo.blps.generated.model.ScheduleDraft
 import ru.itmo.blps.generated.model.ScheduleDraftCreationRequest
 import ru.itmo.blps.model.Program
@@ -9,18 +8,6 @@ import ru.itmo.blps.model.Schedule
 import ru.itmo.blps.model.ScheduleStatus
 
 object Mappers {
-
-    fun Schedule.toRecord(): ScheduleRecord {
-        return ScheduleRecord(
-            this.id, this.status.toString(), this.date
-        )
-    }
-
-    fun Program.toRecord(scheduleId: Long): ProgramRecord {
-        return ProgramRecord(
-            this.id, scheduleId, this.startTime, this.endTime, this.name
-        )
-    }
 
     fun ProgramRecord.toModel(): Program {
         return Program(

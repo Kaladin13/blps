@@ -1,0 +1,21 @@
+POST http://localhost:6678/api/admin/schedule-draft
+Content-Type: application/json
+
+{
+  "dateOfSchedule": "2024-03-01T00:00Z",
+  "programs": [
+    {
+      "startTime": "2024-03-01T00:00Z",
+      "endTime": "2024-03-01T01:00Z",
+      "name": "Vesti"
+    },
+    {
+      "startTime": "2024-03-01T01:00Z",
+      "endTime": "2024-03-01T02:00Z",
+      "name": "Dom 2"
+    }
+  ]
+}
+
+###
+GET http://localhost:6678/api/admin/schedule-draft

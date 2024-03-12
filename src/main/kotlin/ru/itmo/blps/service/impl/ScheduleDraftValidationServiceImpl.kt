@@ -41,7 +41,7 @@ class ScheduleDraftValidationServiceImpl : ScheduleDraftValidationService {
 
     private fun doProgramsOverlap(program1: Program, program2: Program): Boolean {
         // Первая программа заканчивается до начала второй или вторая программа заканчивается до начала первой
-        return !(program1.endTime.isBefore(program2.startTime) || program2.endTime.isBefore(program1.startTime))
+        return !(program1.endTime.compareTo(program2.startTime) <= 0 || program2.endTime.compareTo(program1.startTime) <= 0)
     }
 
 }
