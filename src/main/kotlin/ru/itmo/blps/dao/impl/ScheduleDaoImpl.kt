@@ -21,12 +21,13 @@ class ScheduleDaoImpl(
 
     @Transactional
     override fun insert(schedule: Schedule) {
-        dslContext.batchInsert(
-                schedule.programs.map { schedule.id?.let { it1 -> it.toRecord(it1) } }
-        )
+        val persistedSchedule = dslContext.insertInto(SCHEDULE)
+                .set(schedule.toRecord())
+                .returning()
+                .fetchOne() ?: throw RuntimeException("Can not persist schedule")
 
         dslContext.batchInsert(
-                schedule.toRecord()
+                schedule.programs.map { it.toRecord(persistedSchedule.id)  }
         )
     }
 
