@@ -18,4 +18,17 @@ Content-Type: application/json
 }
 
 ###
+PATCH http://localhost:6678/api/admin/schedule-draft
+Content-Type: application/json
+
+{
+  "scheduleDraftId": 1,
+  "status": "CONFIRMED"
+}
+
+###
 GET http://localhost:6678/api/admin/schedule-draft
+
+
+###
+GET http://localhost:6678/api/user/schedule?datetime=2024-03-01T01:00Z
