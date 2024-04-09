@@ -100,16 +100,23 @@
             <version>0.2.1</version>
         </dependency>
         <dependency>
-            <groupId>org.liquibase</groupId>
-            <artifactId>liquibase-core</artifactId>
-            <version>4.17.2</version>
-        </dependency>
-        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.18.30</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.atomikos</groupId>
+            <artifactId>transactions-spring-boot3-starter</artifactId>
+            <version>6.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.transaction</groupId>
+            <artifactId>jta</artifactId>
+            <version>1.1</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -128,7 +135,7 @@
                 <artifactId>kotlin-maven-plugin</artifactId>
                 <version>${kotlin.version}</version>
                 <configuration>
-                    <jvmTarget>17</jvmTarget>
+                    <jvmTarget>${java.version}</jvmTarget>
                     <args>
                         <arg>-Xjsr305=strict</arg>
                     </args>
@@ -164,14 +171,24 @@
                 <version>3.16.6</version>
                 <executions>
                     <execution>
+                        <id>admin_db</id>
                         <goals>
                             <goal>generate</goal>
                         </goals>
+                        <configuration>
+                            <configurationFile>${project.basedir}/src/main/resources/jooq/jooq_config_admin.xml</configurationFile>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>user_db</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <configurationFile>${project.basedir}/src/main/resources/jooq/jooq_config_user.xml</configurationFile>
+                        </configuration>
                     </execution>
                 </executions>
-                <configuration>
-                    <configurationFile>${project.basedir}/src/main/resources/jooq_config.xml</configurationFile>
-                </configuration>
             </plugin>
 
             <plugin>
@@ -219,14 +236,6 @@
 
 
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.liquibase</groupId>
-                <artifactId>liquibase-maven-plugin</artifactId>
-                <version>4.6.2</version>
-                <configuration>
-                    <propertyFile>src/main/resources/liquibase/liquibase.properties</propertyFile>
-                </configuration>
             </plugin>
 
         </plugins>

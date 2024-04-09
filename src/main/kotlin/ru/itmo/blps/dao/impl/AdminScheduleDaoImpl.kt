@@ -4,7 +4,7 @@ import org.jooq.DSLContext
 import org.jooq.impl.DSL.selectOne
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
-import ru.itmo.blps.dao.ScheduleDao
+import ru.itmo.blps.dao.AdminScheduleDao
 import ru.itmo.blps.generated.jooq.Tables.PROGRAM
 import ru.itmo.blps.generated.jooq.Tables.SCHEDULE
 import ru.itmo.blps.model.Program
@@ -14,19 +14,18 @@ import ru.itmo.blps.util.Mappers.toModel
 import java.time.OffsetDateTime
 
 @Repository
-class ScheduleDaoImpl(
-    private val dslContext: DSLContext,
-) : ScheduleDao {
+class AdminScheduleDaoImpl(
+    private val adminDslContext: DSLContext,
+) : AdminScheduleDao {
 
-    @Transactional
     override fun insert(schedule: Schedule) {
-        val persistedSchedule = dslContext.insertInto(SCHEDULE)
+        val persistedSchedule = adminDslContext.insertInto(SCHEDULE)
             .set(SCHEDULE.STATUS, schedule.status.toString())
             .set(SCHEDULE.DATE, schedule.date)
             .returning()
             .fetchOne() ?: throw RuntimeException("Can not persist schedule")
         schedule.programs.forEach {
-            dslContext.insertInto(PROGRAM)
+            adminDslContext.insertInto(PROGRAM)
                 .set(PROGRAM.SCHEDULE_ID, persistedSchedule.id)
                 .set(PROGRAM.START_TIME, it.startTime)
                 .set(PROGRAM.END_TIME, it.endTime)
@@ -37,7 +36,7 @@ class ScheduleDaoImpl(
 
     @Transactional(readOnly = true)
     override fun getAllByStatus(status: ScheduleStatus): List<Schedule> {
-        val scheduleRecords = dslContext.selectFrom(SCHEDULE)
+        val scheduleRecords = adminDslContext.selectFrom(SCHEDULE)
             .where(SCHEDULE.STATUS.eq(status.name))
             .fetch()
             .toList()
@@ -46,7 +45,7 @@ class ScheduleDaoImpl(
             return emptyList()
         }
 
-        val programRecordsMap = dslContext.selectFrom(PROGRAM)
+        val programRecordsMap = adminDslContext.selectFrom(PROGRAM)
             .where(PROGRAM.SCHEDULE_ID.`in`(
                 scheduleRecords.map { it.id }
             )
@@ -69,10 +68,11 @@ class ScheduleDaoImpl(
     }
 
     @Transactional
+    @Deprecated("Use UserScheduleDaoImpl::getScheduleForDay")
     override fun getScheduleForDay(startTime: OffsetDateTime): List<Program> {
         val endTime = startTime.plusDays(1)
 
-        return dslContext.selectFrom(
+        return adminDslContext.selectFrom(
             SCHEDULE.join(PROGRAM)
                 .on(SCHEDULE.ID.eq(PROGRAM.SCHEDULE_ID))
         ).where(SCHEDULE.STATUS.eq(ScheduleStatus.CONFIRMED.name))
@@ -83,20 +83,40 @@ class ScheduleDaoImpl(
             .map { it.into(PROGRAM) }.map { it.toModel() }
     }
 
+    override fun getById(id: Long): Schedule? {
+        val programs = adminDslContext.selectFrom(PROGRAM)
+                .where(PROGRAM.SCHEDULE_ID.eq(id))
+                .toList()
+                .map { it.toModel() }
+
+        return adminDslContext.selectFrom(SCHEDULE)
+                .where(SCHEDULE.ID.eq(id))
+                .fetchOne()
+                ?.map {
+                    Schedule(
+                        id = it.get(SCHEDULE.ID),
+                        status =  ScheduleStatus.valueOf(it.get(SCHEDULE.STATUS)),
+                        programs = programs,
+                        date = it.get(SCHEDULE.DATE),
+                    )
+                }
+    }
+
     @Transactional
     override fun updateStatus(id: Long, newStatus: ScheduleStatus) {
         if (newStatus == ScheduleStatus.CONFIRMED) {
             val alreadyConfirmed =
-                dslContext.selectFrom(SCHEDULE)
+                adminDslContext.selectFrom(SCHEDULE)
                     .where(SCHEDULE.STATUS.eq(ScheduleStatus.CONFIRMED.name))
+                    .and(SCHEDULE.ID.eq(id))
                     .fetch()
 
             if (alreadyConfirmed.isNotEmpty) {
-                throw RuntimeException("Already has confirmed schedule")
+                throw RuntimeException("Already confirmed schedule")
             }
         }
 
-        dslContext.update(SCHEDULE)
+        adminDslContext.update(SCHEDULE)
             .set(SCHEDULE.STATUS, newStatus.name)
             .where(SCHEDULE.ID.eq(id))
             .execute()
@@ -104,7 +124,7 @@ class ScheduleDaoImpl(
 
     @Transactional(readOnly = true)
     override fun exists(id: Long): Boolean {
-        return dslContext.fetchExists(
+        return adminDslContext.fetchExists(
             selectOne().from(SCHEDULE)
                 .where(SCHEDULE.ID.eq(id))
         )

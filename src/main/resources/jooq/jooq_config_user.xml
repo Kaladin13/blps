@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration xmlns="http://www.jooq.org/xsd/jooq-codegen-3.15.0.xsd">
+    <jdbc>
+        <driver>org.postgresql.Driver</driver>
+        <url>jdbc:postgresql://localhost:6432/postgres</url>
+        <user>postgres</user>
+        <password>postgres</password>
+    </jdbc>
+    <generator>
+        <database>
+            <name>org.jooq.meta.postgres.PostgresDatabase</name>
+            <includes>.*</includes>
+            <inputSchema>public</inputSchema>
+        </database>
+        <target>
+            <packageName>ru.itmo.blps.generated.jooq.production</packageName>
+            <directory>target/generated-sources/jooq</directory>
+        </target>
+    </generator>
+</configuration>

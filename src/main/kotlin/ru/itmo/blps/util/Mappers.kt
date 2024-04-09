@@ -18,6 +18,15 @@ object Mappers {
         )
     }
 
+    fun ru.itmo.blps.generated.jooq.production.tables.records.ProgramRecord.toModel(): Program {
+        return Program(
+                id = this.id,
+                name = this.name,
+                startTime = this.startTime,
+                endTime = this.endTime,
+        )
+    }
+
     fun Program.toApiModel(): ru.itmo.blps.generated.model.Program {
         return ru.itmo.blps.generated.model.Program()
             .name(this.name)
