@@ -2,6 +2,7 @@ package ru.itmo.blps.api.admin
 
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.server.ResponseStatusException
@@ -23,6 +24,7 @@ class ScheduleApiService(
     private val userScheduleDao: UserScheduleDao,
     private val scheduleDraftValidationService: ScheduleDraftValidationService,
 ) : ScheduleDraftApiDelegate {
+    @PreAuthorize("hasRole('MAX')")
     override fun createScheduleDraft(
             scheduleDraftCreationRequest: ScheduleDraftCreationRequest
     ): ResponseEntity<ScheduleDraft> {
