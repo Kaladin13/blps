@@ -59,7 +59,6 @@ class ScheduleApiService(
                     ?: error("Schedule draft not found in admin db after update")
             userScheduleDao.insert(schedule);
         }
-        error("huyak")
 
         return ResponseEntity(HttpStatus.OK)
     }
