@@ -53,7 +53,7 @@ class SecurityConfig(
             .cors {
                 it.configurationSource {
                     val corsConfiguration = CorsConfiguration().applyPermitDefaultValues()
-                    corsConfiguration.allowedOrigins = listOf("http://localhost:3000")
+                    corsConfiguration.allowedOrigins = listOf("http://localhost:6678")
                     corsConfiguration.addAllowedMethod(HttpMethod.DELETE)
                     corsConfiguration
                 }
@@ -63,14 +63,8 @@ class SecurityConfig(
             }
             .authorizeHttpRequests {
                 it.requestMatchers(
-                    "/login",
-                    "/register",
-                    "/refresh",
-                    "/ping",
-                    "/v3/api-docs/**",
-                    "/v3/api-docs**",
-                    "/swagger-ui**",
-                    "/swagger-ui/**",
+                    "*/ping*",
+                    "*/login*"
                 ).permitAll().anyRequest().authenticated()
             }
             .sessionManagement {
