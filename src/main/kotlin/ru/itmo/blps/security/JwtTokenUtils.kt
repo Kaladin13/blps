@@ -14,14 +14,12 @@ import java.util.*
 @Service
 class JwtTokenUtil(
     @Value("\${jwt.access.secret}") private val accessTokenSecret: String,
-    @Value("\${jwt.access.validity}") private val accessTokenValidity: Int,
 ) : Serializable {
-    private fun generateToken(userId: Long, roles: List<String>, secret: String, validity: Int): String {
+    private fun generateToken(userId: Long, secret: String, validity: Int): String {
         val currentDate = Date()
 
         return Jwts.builder()
             .setSubject(userId.toString())
-            .claim("roles", roles)
             .setIssuedAt(currentDate)
             .setExpiration(Date(currentDate.time + validity))
             .signWith(getSignInKey())
