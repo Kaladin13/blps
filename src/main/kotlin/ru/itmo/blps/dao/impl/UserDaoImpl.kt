@@ -11,7 +11,7 @@ class UserDaoImpl : UserDao {
 
     override fun getByUsername(username: String): User? {
         val users = XmlMapper().readValue(stream, object : TypeReference<List<User>>() {}) ?: emptyList()
-        return users.filter { it.username == username }.firstOrNull()
+        return users.firstOrNull { it.username == username }
     }
 
     companion object {
