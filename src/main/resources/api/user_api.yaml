@@ -21,6 +21,25 @@ paths:
             application/json:
               schema:
                 $ref: './common_api.yaml#/components/schemas/pingResponse'
+  /login:
+    get:
+      operationId: security
+      tags:
+        - util
+      parameters:
+        - in: query
+          required: true
+          name: id
+          schema:
+            type: number
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+
   /schedule:
     get:
       operationId: getScheduleForDay
