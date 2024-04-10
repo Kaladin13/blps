@@ -15,7 +15,7 @@ import java.util.*
 class JwtTokenUtil(
     @Value("\${jwt.access.secret}") private val accessTokenSecret: String,
 ) : Serializable {
-    private fun generateToken(userId: Long, secret: String, validity: Int): String {
+    fun generateToken(userId: Long, validity: Int): String {
         val currentDate = Date()
 
         return Jwts.builder()

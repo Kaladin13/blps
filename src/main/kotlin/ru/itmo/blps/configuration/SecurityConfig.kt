@@ -63,8 +63,7 @@ class SecurityConfig(
             }
             .authorizeHttpRequests {
                 it.requestMatchers(
-                    "*/ping*",
-                    "*/login*"
+                    "/api/user/login"
                 ).permitAll().anyRequest().authenticated()
             }
             .sessionManagement {

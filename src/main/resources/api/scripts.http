@@ -1,5 +1,11 @@
+GET http://localhost:6678/api/user/login?id=1
+Content-Type: application/json
+
+###
+
 POST http://localhost:6678/api/admin/schedule-draft
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzEyNzQwNTExLCJleHAiOjE3MTI3NDA1ODF9.wt_ThgS44k19UPmxa3C0nzkr_0BqdxKX1eDszx4Ku5ncnhhSd-EvmFMK3IhfRVNQ
 
 {
   "dateOfSchedule": "2024-03-01T00:00Z",
