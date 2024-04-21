@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service
 import ru.itmo.blps.model.ScheduleHistory
 
 @Service
-class JmsService(
+class JmsProducer(
         private val jmsTemplate: JmsTemplate
 ) {
     fun sendMessage(destination: String, message: ScheduleHistory) {

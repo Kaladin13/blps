@@ -13,7 +13,7 @@ import ru.itmo.blps.generated.model.ScheduleDraft
 import ru.itmo.blps.generated.model.ScheduleDraftCreationRequest
 import ru.itmo.blps.generated.model.ScheduleDraftStatus
 import ru.itmo.blps.generated.model.UpdateScheduleDraftStatus
-import ru.itmo.blps.jms.JmsService
+import ru.itmo.blps.jms.JmsProducer
 import ru.itmo.blps.model.ScheduleHistory
 import ru.itmo.blps.model.ScheduleStatus
 import ru.itmo.blps.service.ScheduleDraftValidationService
@@ -26,7 +26,7 @@ class ScheduleApiService(
         private val adminScheduleDao: AdminScheduleDao,
         private val userScheduleDao: UserScheduleDao,
         private val scheduleDraftValidationService: ScheduleDraftValidationService,
-        private val jmsService: JmsService
+        private val jmsProducer: JmsProducer
 ) : ScheduleDraftApiDelegate {
     @Transactional
     override fun createScheduleDraft(
@@ -41,7 +41,7 @@ class ScheduleApiService(
 
         val persistedId = adminScheduleDao.insert(draft)
 
-        jmsService.sendMessage(
+        jmsProducer.sendMessage(
                 JMS_QUEUE,
                 ScheduleHistory(
                         id = persistedId,
@@ -49,7 +49,7 @@ class ScheduleApiService(
                         currentStatus = draft.status,
                         date = draft.date,
                         changeTime = OffsetDateTime.now(),
-                        programs = draft.programs,
+                        programs = draft.programs, // TODO set ids
                 )
         )
         return ResponseEntity.ok(draft.copy(id = persistedId).toApiModel())
@@ -84,7 +84,7 @@ class ScheduleApiService(
             }
         }
 
-        jmsService.sendMessage(
+        jmsProducer.sendMessage(
                 JMS_QUEUE,
                 ScheduleHistory(
                         id = scheduleToUpdate.id!!,
@@ -100,6 +100,6 @@ class ScheduleApiService(
     }
 
     companion object {
-        private const val JMS_QUEUE = "s"
+        private const val JMS_QUEUE = "schedule-service"
     }
 }
