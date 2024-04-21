@@ -1,5 +1,6 @@
 package ru.itmo.blps.api.admin
 
+import org.jooq.exception.IntegrityConstraintViolationException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Component
@@ -33,7 +34,7 @@ class ScheduleApiService(
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, validationResult.reason)
         }
         adminScheduleDao.insert(draft)
-        return ResponseEntity(HttpStatus.OK) // TODO add return
+        return ResponseEntity.ok(draft.toApiModel())
     }
 
     override fun getAllScheduleDrafts(): ResponseEntity<List<ScheduleDraft>> {
@@ -57,7 +58,11 @@ class ScheduleApiService(
         if (updateScheduleDraftStatus.status == ScheduleDraftStatus.CONFIRMED) {
             val schedule = adminScheduleDao.getById(updateScheduleDraftStatus.scheduleDraftId)
                     ?: error("Schedule draft not found in admin db after update")
-            userScheduleDao.insert(schedule);
+            try {
+                userScheduleDao.insert(schedule)
+            } catch (e: IntegrityConstraintViolationException) {
+                throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Schedule with this date already exists")
+            }
         }
 
         return ResponseEntity(HttpStatus.OK)
