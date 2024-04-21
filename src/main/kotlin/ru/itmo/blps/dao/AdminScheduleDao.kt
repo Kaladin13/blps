@@ -5,7 +5,7 @@ import ru.itmo.blps.model.Schedule
 import ru.itmo.blps.model.ScheduleStatus
 import java.time.OffsetDateTime
 
-interface ScheduleDao {
+interface AdminScheduleDao {
     fun insert(schedule: Schedule)
 
     fun getAllByStatus(status: ScheduleStatus): List<Schedule>
@@ -15,4 +15,6 @@ interface ScheduleDao {
     fun exists(id: Long): Boolean
 
     fun getScheduleForDay(startTime: OffsetDateTime): List<Program>
+
+    fun getById(id: Long): Schedule?
 }
