@@ -6,7 +6,7 @@ import ru.itmo.blps.model.ScheduleStatus
 import java.time.OffsetDateTime
 
 interface AdminScheduleDao {
-    fun insert(schedule: Schedule)
+    fun insert(schedule: Schedule): Long
 
     fun getAllByStatus(status: ScheduleStatus): List<Schedule>
 

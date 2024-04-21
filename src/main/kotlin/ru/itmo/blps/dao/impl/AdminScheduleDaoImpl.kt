@@ -18,7 +18,7 @@ class AdminScheduleDaoImpl(
     private val adminDslContext: DSLContext,
 ) : AdminScheduleDao {
 
-    override fun insert(schedule: Schedule) {
+    override fun insert(schedule: Schedule): Long {
         val persistedSchedule = adminDslContext.insertInto(SCHEDULE)
             .set(SCHEDULE.STATUS, schedule.status.toString())
             .set(SCHEDULE.DATE, schedule.date)
@@ -32,6 +32,8 @@ class AdminScheduleDaoImpl(
                 .set(PROGRAM.NAME, it.name)
                 .execute()
         }
+
+        return persistedSchedule.id
     }
 
     @Transactional(readOnly = true)

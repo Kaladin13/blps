@@ -33,8 +33,8 @@ class ScheduleApiService(
         if (!validationResult.isValid) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, validationResult.reason)
         }
-        adminScheduleDao.insert(draft)
-        return ResponseEntity.ok(draft.toApiModel())
+        val persistedId = adminScheduleDao.insert(draft)
+        return ResponseEntity.ok(draft.copy(id = persistedId).toApiModel())
     }
 
     override fun getAllScheduleDrafts(): ResponseEntity<List<ScheduleDraft>> {
@@ -57,7 +57,10 @@ class ScheduleApiService(
 
         if (updateScheduleDraftStatus.status == ScheduleDraftStatus.CONFIRMED) {
             val schedule = adminScheduleDao.getById(updateScheduleDraftStatus.scheduleDraftId)
-                    ?: error("Schedule draft not found in admin db after update")
+                    ?:  throw ResponseStatusException(
+                            HttpStatus.INTERNAL_SERVER_ERROR,
+                            "Schedule draft not found in admin db after update"
+                    )
             try {
                 userScheduleDao.insert(schedule)
             } catch (e: IntegrityConstraintViolationException) {
