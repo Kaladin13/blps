@@ -1,7 +1,5 @@
 package ru.itmo.blps.dao.impl
 
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.dataformat.xml.XmlMapper
 import org.springframework.stereotype.Repository
 import ru.itmo.blps.dao.UserDao
 import ru.itmo.blps.model.Role
@@ -11,10 +9,10 @@ import ru.itmo.blps.model.User
 class UserDaoImpl : UserDao {
 
     override fun getByUsername(username: String): User? {
-        val users = XmlMapper().readValue(stream, object : TypeReference<List<User>>() {}) ?: emptyList()
-        return users.firstOrNull { it.username == username }
+//        val users = XmlMapper().readValue(stream, object : TypeReference<List<User>>() {}) ?: emptyList()
+//        return users[0]
         val rolesList = listOf(
-            Role(1, "2")
+            Role(1, "MAX")
         )
 
         return User("max", "secret1", rolesList)

@@ -5,7 +5,8 @@ Content-Type: application/json
 
 POST http://localhost:6678/api/admin/schedule-draft
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzEyNzQwNTExLCJleHAiOjE3MTI3NDA1ODF9.wt_ThgS44k19UPmxa3C0nzkr_0BqdxKX1eDszx4Ku5ncnhhSd-EvmFMK3IhfRVNQ
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzEyNzQyNzYwLCJleHAiOjE3MTI3NDI4MzB9.6eqEFVGHPRS6hvtnBUpjESTCdfqyeh90E3MTb549hXExwER6RAhImDGBMic7NAHA
+
 
 {
   "dateOfSchedule": "2024-03-01T00:00Z",
@@ -26,9 +27,11 @@ Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzEyNzQwNTExL
 ###
 PATCH http://localhost:6678/api/admin/schedule-draft
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzEyNzQyNzYwLCJleHAiOjE3MTI3NDI4MzB9.6eqEFVGHPRS6hvtnBUpjESTCdfqyeh90E3MTb549hXExwER6RAhImDGBMic7NAHA
+
 
 {
-  "scheduleDraftId": 1,
+  "scheduleDraftId": 2,
   "status": "CONFIRMED"
 }
 
@@ -38,3 +41,4 @@ GET http://localhost:6678/api/admin/schedule-draft
 
 ###
 GET http://localhost:6678/api/user/schedule?datetime=2024-03-01T01:00Z
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzEyNzQyNTg5LCJleHAiOjE3MTI3NDI2NTl9.jcJ03PPWL-dskcHM1EQhjq_L0lSMxfcV4oFTQdLkhirrIcaThT0lc5_J9_gtpcVB

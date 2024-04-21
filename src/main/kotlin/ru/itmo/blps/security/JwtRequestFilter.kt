@@ -25,8 +25,14 @@ class JwtRequestFilter(
             try {
                 val userId = jwtTokenUtil.getIdFromToken(it)
                 if (SecurityContextHolder.getContext().authentication == null) {
-                    val customBearerToken = userId?.let { it1 -> CustomBearerUser(it1) }
-                        ?.let { it2 -> CustomBearerToken(it2) }
+//                    val customBearerToken = userId?.let { it1 -> CustomBearerUser(it1) }
+//                        ?.let { it2 -> CustomBearerToken(it2) }
+
+                    val rolesList = listOf(
+                            "MAX"
+                    )
+
+                    val customBearerToken = CustomBearerToken(CustomBearerUser(1, rolesList, "max"))
 
                     SecurityContextHolder.getContext().authentication = customBearerToken
                 }
