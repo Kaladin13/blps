@@ -15,54 +15,54 @@ import java.time.OffsetDateTime
 
 @Repository
 class AdminScheduleDaoImpl(
-    private val adminDslContext: DSLContext,
+        private val adminDslContext: DSLContext,
 ) : AdminScheduleDao {
 
-    override fun insert(schedule: Schedule): Long {
+    override fun insert(schedule: Schedule): Schedule {
         val persistedSchedule = adminDslContext.insertInto(SCHEDULE)
-            .set(SCHEDULE.STATUS, schedule.status.toString())
-            .set(SCHEDULE.DATE, schedule.date)
-            .returning()
-            .fetchOne() ?: throw RuntimeException("Can not persist schedule")
-        schedule.programs.forEach {
+                .set(SCHEDULE.STATUS, schedule.status.toString())
+                .set(SCHEDULE.DATE, schedule.date)
+                .returning()
+                .fetchOne() ?: throw RuntimeException("Can not persist schedule")
+        val persistedPrograms = schedule.programs.map {
             adminDslContext.insertInto(PROGRAM)
-                .set(PROGRAM.SCHEDULE_ID, persistedSchedule.id)
-                .set(PROGRAM.START_TIME, it.startTime)
-                .set(PROGRAM.END_TIME, it.endTime)
-                .set(PROGRAM.NAME, it.name)
-                .execute()
+                    .set(PROGRAM.SCHEDULE_ID, persistedSchedule.id)
+                    .set(PROGRAM.START_TIME, it.startTime)
+                    .set(PROGRAM.END_TIME, it.endTime)
+                    .set(PROGRAM.NAME, it.name)
+                    .returning()
+                    .fetchOne()
+                    ?.toModel() ?: throw RuntimeException("Can not persist program")
         }
 
-        return persistedSchedule.id
+        return persistedSchedule.toModel(persistedPrograms)
     }
 
     @Transactional(readOnly = true)
     override fun getAllByStatus(status: ScheduleStatus): List<Schedule> {
         val scheduleRecords = adminDslContext.selectFrom(SCHEDULE)
-            .where(SCHEDULE.STATUS.eq(status.name))
-            .fetch()
-            .toList()
+                .where(SCHEDULE.STATUS.eq(status.name))
+                .fetch()
+                .toList()
 
         if (scheduleRecords.isEmpty()) {
             return emptyList()
         }
 
         val programRecordsMap = adminDslContext.selectFrom(PROGRAM)
-            .where(PROGRAM.SCHEDULE_ID.`in`(
-                scheduleRecords.map { it.id }
-            )
-            )
-            .fetchGroups(PROGRAM.SCHEDULE_ID)
+                .where(PROGRAM.SCHEDULE_ID.`in`(
+                        scheduleRecords.map { it.id }
+                )
+                )
+                .fetchGroups(PROGRAM.SCHEDULE_ID)
 
         val result = ArrayList<Schedule>()
         for (scheduleRecord in scheduleRecords) {
-            val schedule = Schedule(
-                id = scheduleRecord.id,
-                status = ScheduleStatus.valueOf(scheduleRecord.status),
-                date = scheduleRecord.date,
-                programs = programRecordsMap[scheduleRecord.id]?.map { it.toModel() }
-                    ?: emptyList()
+            val schedule = scheduleRecord.toModel(
+                    programRecordsMap[scheduleRecord.id]?.map { it.toModel() }
+                            ?: emptyList()
             )
+
             result.add(schedule)
         }
 
@@ -75,14 +75,14 @@ class AdminScheduleDaoImpl(
         val endTime = startTime.plusDays(1)
 
         return adminDslContext.selectFrom(
-            SCHEDULE.join(PROGRAM)
-                .on(SCHEDULE.ID.eq(PROGRAM.SCHEDULE_ID))
+                SCHEDULE.join(PROGRAM)
+                        .on(SCHEDULE.ID.eq(PROGRAM.SCHEDULE_ID))
         ).where(SCHEDULE.STATUS.eq(ScheduleStatus.CONFIRMED.name))
-            .and(PROGRAM.START_TIME.between(startTime, endTime))
-            .and(PROGRAM.END_TIME.between(startTime, endTime))
-            .orderBy(PROGRAM.START_TIME.asc())
-            .fetch()
-            .map { it.into(PROGRAM) }.map { it.toModel() }
+                .and(PROGRAM.START_TIME.between(startTime, endTime))
+                .and(PROGRAM.END_TIME.between(startTime, endTime))
+                .orderBy(PROGRAM.START_TIME.asc())
+                .fetch()
+                .map { it.into(PROGRAM) }.map { it.toModel() }
     }
 
     override fun getById(id: Long): Schedule? {
@@ -94,24 +94,17 @@ class AdminScheduleDaoImpl(
         return adminDslContext.selectFrom(SCHEDULE)
                 .where(SCHEDULE.ID.eq(id))
                 .fetchOne()
-                ?.map {
-                    Schedule(
-                        id = it.get(SCHEDULE.ID),
-                        status =  ScheduleStatus.valueOf(it.get(SCHEDULE.STATUS)),
-                        programs = programs,
-                        date = it.get(SCHEDULE.DATE),
-                    )
-                }
+                ?.toModel(programs)
     }
 
     @Transactional
     override fun updateStatus(id: Long, newStatus: ScheduleStatus) {
         if (newStatus == ScheduleStatus.CONFIRMED) {
             val alreadyConfirmed =
-                adminDslContext.selectFrom(SCHEDULE)
-                    .where(SCHEDULE.STATUS.eq(ScheduleStatus.CONFIRMED.name))
-                    .and(SCHEDULE.ID.eq(id))
-                    .fetch()
+                    adminDslContext.selectFrom(SCHEDULE)
+                            .where(SCHEDULE.STATUS.eq(ScheduleStatus.CONFIRMED.name))
+                            .and(SCHEDULE.ID.eq(id))
+                            .fetch()
 
             if (alreadyConfirmed.isNotEmpty) {
                 throw RuntimeException("Already confirmed schedule")
@@ -119,16 +112,16 @@ class AdminScheduleDaoImpl(
         }
 
         adminDslContext.update(SCHEDULE)
-            .set(SCHEDULE.STATUS, newStatus.name)
-            .where(SCHEDULE.ID.eq(id))
-            .execute()
+                .set(SCHEDULE.STATUS, newStatus.name)
+                .where(SCHEDULE.ID.eq(id))
+                .execute()
     }
 
     @Transactional(readOnly = true)
     override fun exists(id: Long): Boolean {
         return adminDslContext.fetchExists(
-            selectOne().from(SCHEDULE)
-                .where(SCHEDULE.ID.eq(id))
+                selectOne().from(SCHEDULE)
+                        .where(SCHEDULE.ID.eq(id))
         )
     }
 }

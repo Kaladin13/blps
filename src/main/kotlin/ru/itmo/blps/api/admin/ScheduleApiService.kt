@@ -17,6 +17,7 @@ import ru.itmo.blps.jms.JmsProducer
 import ru.itmo.blps.model.ScheduleHistory
 import ru.itmo.blps.model.ScheduleStatus
 import ru.itmo.blps.service.ScheduleDraftValidationService
+import ru.itmo.blps.service.ScheduleHistoryService
 import ru.itmo.blps.util.Mappers.toApiModel
 import ru.itmo.blps.util.Mappers.toModel
 import java.time.OffsetDateTime
@@ -26,7 +27,7 @@ class ScheduleApiService(
         private val adminScheduleDao: AdminScheduleDao,
         private val userScheduleDao: UserScheduleDao,
         private val scheduleDraftValidationService: ScheduleDraftValidationService,
-        private val jmsProducer: JmsProducer
+        private val scheduleHistoryService: ScheduleHistoryService,
 ) : ScheduleDraftApiDelegate {
     @Transactional
     override fun createScheduleDraft(
@@ -39,20 +40,13 @@ class ScheduleApiService(
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, validationResult.reason)
         }
 
-        val persistedId = adminScheduleDao.insert(draft)
+        val persistedSchedule = adminScheduleDao.insert(draft)
 
-        jmsProducer.sendMessage(
-                JMS_QUEUE,
-                ScheduleHistory(
-                        id = persistedId,
-                        prevStatus = null,
-                        currentStatus = draft.status,
-                        date = draft.date,
-                        changeTime = OffsetDateTime.now(),
-                        programs = draft.programs, // TODO set ids
-                )
+        scheduleHistoryService.add(
+                schedule = persistedSchedule
         )
-        return ResponseEntity.ok(draft.copy(id = persistedId).toApiModel())
+
+        return ResponseEntity.ok(persistedSchedule.toApiModel())
     }
 
     override fun getAllScheduleDrafts(): ResponseEntity<List<ScheduleDraft>> {
@@ -60,7 +54,7 @@ class ScheduleApiService(
         return ResponseEntity.ok(result)
     }
 
-    @Transactional(transactionManager = "transactionManager")
+    @Transactional
     override fun updateScheduleDraftStatus(
             updateScheduleDraftStatus: UpdateScheduleDraftStatus
     ): ResponseEntity<Void> {
@@ -84,22 +78,11 @@ class ScheduleApiService(
             }
         }
 
-        jmsProducer.sendMessage(
-                JMS_QUEUE,
-                ScheduleHistory(
-                        id = scheduleToUpdate.id!!,
-                        prevStatus = scheduleToUpdate.status,
-                        currentStatus = scheduleUpdated.status,
-                        date = scheduleUpdated.date,
-                        changeTime = OffsetDateTime.now(),
-                        programs = scheduleUpdated.programs,
-                )
+        scheduleHistoryService.add(
+                prevStatus = scheduleToUpdate.status,
+                schedule = scheduleUpdated,
         )
 
         return ResponseEntity(HttpStatus.OK)
-    }
-
-    companion object {
-        private const val JMS_QUEUE = "schedule-service"
     }
 }

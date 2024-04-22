@@ -8,7 +8,9 @@ data class ScheduleHistory
 @JsonCreator
 constructor(
         @JsonProperty("id")
-        val id: Long,
+        val id: Long? = null,
+        @JsonProperty("scheduleDraftId")
+        val scheduleDraftId: Long,
         @JsonProperty("prevStatus")
         val prevStatus: ScheduleStatus?,
         @JsonProperty("currentStatus")
@@ -17,6 +19,6 @@ constructor(
         val programs: List<Program>,
         @JsonProperty("date")
         val date: OffsetDateTime,
-        @JsonProperty("changeTime")
-        val changeTime: OffsetDateTime,
+        @JsonProperty("updatedAt")
+        val updatedAt: OffsetDateTime,
 )

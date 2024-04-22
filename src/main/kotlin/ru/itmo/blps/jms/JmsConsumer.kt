@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component
 @Component
 class JmsConsumer {
 
-    @JmsListener(destination = "schedule-service", containerFactory = "jmsFactory")
+    @JmsListener(destination = "\${topic_name}", containerFactory = "jmsFactory")
     fun receiveMessage(
             message: String, session: Session
     ) {
@@ -19,7 +19,6 @@ class JmsConsumer {
             logger.error("Error while reading jms", e)
             session.rollback()
         }
-
     }
 
     companion object {
