@@ -19,7 +19,7 @@ class ScheduleHistoryServiceImpl(
 ) : ScheduleHistoryService {
     override fun add(prevStatus: ScheduleStatus?, schedule: Schedule) {
         val historyLog = ScheduleHistory(
-                scheduleDraftId = 1,
+                scheduleDraftId = schedule.id!!,
                 prevStatus = prevStatus,
                 currentStatus = schedule.status,
                 date = schedule.date,
