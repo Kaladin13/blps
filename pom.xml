@@ -297,54 +297,54 @@
                 </executions>
             </plugin>
 
-            <plugin>
-                <groupId>org.openapitools</groupId>
-                <artifactId>openapi-generator-maven-plugin</artifactId>
-                <version>7.1.0</version>
-                <executions>
+<!--            <plugin>-->
+<!--                <groupId>org.openapitools</groupId>-->
+<!--                <artifactId>openapi-generator-maven-plugin</artifactId>-->
+<!--                <version>7.1.0</version>-->
+<!--                <executions>-->
 
-                    <execution>
-                        <id>user_api</id>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                        <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/api/user_api.yaml</inputSpec>
-                            <generatorName>spring</generatorName>
-                            <output>${project.build.directory}/generated-sources/openapi</output>
-                            <apiPackage>ru.itmo.blps.generated.api.user</apiPackage>
-                            <modelPackage>ru.itmo.blps.generated.model</modelPackage>
-                            <invokerPackage>ru.itmo.blps</invokerPackage>
-                            <configOptions>
-<!--                                <delegatePattern>true</delegatePattern>-->
-                                <apis>false</apis>
-                            </configOptions>
-                        </configuration>
-                    </execution>
+<!--                    <execution>-->
+<!--                        <id>user_api</id>-->
+<!--                        <goals>-->
+<!--                            <goal>generate</goal>-->
+<!--                        </goals>-->
+<!--                        <configuration>-->
+<!--                            <inputSpec>${project.basedir}/src/main/resources/api/user_api.yaml</inputSpec>-->
+<!--                            <generatorName>spring</generatorName>-->
+<!--                            <output>${project.build.directory}/generated-sources/openapi</output>-->
+<!--                            <apiPackage>ru.itmo.blps.generated.api.user</apiPackage>-->
+<!--                            <modelPackage>ru.itmo.blps.generated.model</modelPackage>-->
+<!--                            <invokerPackage>ru.itmo.blps</invokerPackage>-->
+<!--                            <configOptions>-->
+<!--&lt;!&ndash;                                <delegatePattern>true</delegatePattern>&ndash;&gt;-->
+<!--                                <apis>false</apis>-->
+<!--                            </configOptions>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
 
-                    <execution>
-                        <id>admin_api</id>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                        <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/api/admin_api.yaml</inputSpec>
-                            <generatorName>spring</generatorName>
-                            <output>${project.build.directory}/generated-sources/openapi</output>
-                            <apiPackage>ru.itmo.blps.generated.api.admin</apiPackage>
-                            <modelPackage>ru.itmo.blps.generated.model</modelPackage>
-                            <invokerPackage>ru.itmo.blps</invokerPackage>
-                            <configOptions>
-                                <useTags>true</useTags>
-<!--                                <delegatePattern>true</delegatePattern>-->
-                                <apis>false</apis>
-                            </configOptions>
-                        </configuration>
-                    </execution>
+<!--                    <execution>-->
+<!--                        <id>admin_api</id>-->
+<!--                        <goals>-->
+<!--                            <goal>generate</goal>-->
+<!--                        </goals>-->
+<!--                        <configuration>-->
+<!--                            <inputSpec>${project.basedir}/src/main/resources/api/admin_api.yaml</inputSpec>-->
+<!--                            <generatorName>spring</generatorName>-->
+<!--                            <output>${project.build.directory}/generated-sources/openapi</output>-->
+<!--                            <apiPackage>ru.itmo.blps.generated.api.admin</apiPackage>-->
+<!--                            <modelPackage>ru.itmo.blps.generated.model</modelPackage>-->
+<!--                            <invokerPackage>ru.itmo.blps</invokerPackage>-->
+<!--                            <configOptions>-->
+<!--                                <useTags>true</useTags>-->
+<!--&lt;!&ndash;                                <delegatePattern>true</delegatePattern>&ndash;&gt;-->
+<!--                                <apis>false</apis>-->
+<!--                            </configOptions>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
 
 
-                </executions>
-            </plugin>
+<!--                </executions>-->
+<!--            </plugin>-->
 
         </plugins>
     </build>
